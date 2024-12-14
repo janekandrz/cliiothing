@@ -5,17 +5,17 @@ import java.util.Date;
 public class Transaction {
 
 
-    private final String date;
+    private final Date date;
     private final double amount;
     private final Category category;
 
-    public Transaction(double a, Category c, String d) {
+    public Transaction(double a, Category c, Date d) {
         this.date = d;
         this.amount = a;
         this.category = c;
     }
 
-    public String getTDate() {
+    public Date getTDate() {
         return this.date;
     }
 
@@ -28,7 +28,6 @@ public class Transaction {
     }
 
     public String TransactionString() {
-
         String amount = String.valueOf(this.getTAmount());
         String date = String.valueOf(this.getTDate());
         String category = String.valueOf(this.getTCategory());

@@ -1,7 +1,11 @@
 package CLI;
 
 import commands.*;
+import finance.Category;
+import finance.Transaction;
+
 import java.util.Scanner;
+import java.util.Date;
 
 public class CLI {
     private static commandHelp CommandHelp = new commandHelp();
@@ -10,8 +14,14 @@ public class CLI {
     private static commandCreate CommandCreate = new commandCreate();
     private static commandRead CommandRead = new commandRead();
     private static commandWrite CommandWrite = new commandWrite();
+    private static checkers check = new checkers();
 
     public static String dirPath;
+
+    public static String amm;
+    public static String category;
+    public static Date date = new Date();
+
 
     public static void handleInput() {
         Scanner scanner = new Scanner(System.in);
@@ -67,7 +77,33 @@ public class CLI {
             CommandRead.Execute(dirPath,command);
         }
         if(command.startsWith("write")){
-            CommandWrite.Execute(dirPath,command);
+            Scanner scanner = new Scanner(System.in);
+
+            while(amm == null){
+                System.out.println("Enter transaction amount: ");
+                String tempAmm = scanner.nextLine();
+                if(!check.isNumeric(tempAmm)){
+                    System.out.println("Amount must be numeric!");
+                }else{
+                    amm=tempAmm;
+                }
+            }
+            while(category==null){
+                System.out.println("Enter transaction category(FOOD,ENTERTAINMENT,RENT): ");
+                String tempCat = scanner.nextLine();
+                if(!tempCat.equals("FOOD") && !tempCat.equals("ENTERTAINMENT") && !tempCat.equals("RENT")){
+                    System.out.println("category must chosen from the list!");
+                }else{
+                    category=tempCat;
+                }
+            }
+
+            double ammD = Double.parseDouble(amm);
+            Category cat = Category.valueOf(category);
+
+            Transaction tran = new Transaction(ammD,cat,date);
+            System.out.println(tran.TransactionString());
+            CommandWrite.Execute(dirPath,command,tran.TransactionString());
         }
         if(!command.startsWith("list") && !command.startsWith("dir") && !command.startsWith("help") && !command.startsWith("create") && !command.startsWith("read") && !command.startsWith("write")){
             System.out.println("Unknown command: " + command);
